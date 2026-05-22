@@ -8,11 +8,13 @@ import {
 } from "@tanstack/react-router";
 import { AppLayout } from "@/components/AppLayout";
 import { Toaster } from "@/components/ui/sonner";
-import { UserProvider } from "@/contexts/UserContext";
+import { UserProvider, useUser } from "@/contexts/UserContext";
+import { Navigate, useLocation, Outlet as RouterOutlet } from "@tanstack/react-router";
 import { useAuth, AuthState } from "@/hooks/use-auth";
 import appCss from "../styles.css?url";
 import { useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { Loader2 } from "lucide-react";
 
 export const Route = createRootRouteWithContext<{ 
   queryClient: QueryClient;
