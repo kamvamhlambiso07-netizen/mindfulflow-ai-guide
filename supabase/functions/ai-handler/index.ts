@@ -19,11 +19,24 @@ serve(async (req) => {
 
     let messages = [];
     
+    // Add user context for personalization if provided
+    let userContextString = "";
+    if (payload.userContext) {
+      const { affectingProductivity, strugglingHabits, dailyGoals, struggleTime } = payload.userContext;
+      userContextString = `\n\nUSER CONTEXT (CRITICAL FOR PERSONALIZATION):
+- What affects their productivity: ${affectingProductivity || 'Not specified'}
+- Habits they struggle with: ${(strugglingHabits || []).join(', ') || 'Not specified'}
+- Their daily goals: ${dailyGoals || 'Not specified'}
+- When they struggle most: ${(struggleTime || []).join(', ') || 'Not specified'}
+
+You MUST use this context to personalize your responses, making them highly relevant, supportive, and specifically tailored to the user's challenges and goals. DO NOT judge the user. Provide actionable, empathetic advice suited to their specific time constraints and habits.`;
+    }
+    
     if (action === "chat") {
       messages = [
         { 
           role: "system", 
-          content: "You are an AI Productivity Coach for FocusFlow AI. Your goal is to help users overcome procrastination, stay focused, and build healthy work habits. Provide motivational advice, practical focus techniques, and empathetic support. Do not provide medical or psychological treatment advice. Keep responses concise, structured, and professional." 
+          content: "You are an AI Productivity Coach for FocusFlow AI. Your goal is to help users overcome procrastination, stay focused, and build healthy work habits. Provide motivational advice, practical focus techniques, and empathetic support. Do not provide medical or psychological treatment advice. Keep responses concise, structured, and professional." + userContextString
         },
         ...payload.messages,
       ];
