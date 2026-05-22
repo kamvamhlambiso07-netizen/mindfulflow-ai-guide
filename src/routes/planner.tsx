@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { streamAiAction } from "@/lib/ai";
 import { toast } from "sonner";
-import { Loader2, Sparkles } from "lucide-react";
+import { Loader2, Sparkles, CheckSquare } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 
 export const Route = createFileRoute("/planner")({
@@ -117,8 +117,7 @@ function Planner() {
             <div className="pt-4 text-sm text-muted-foreground">
               <p className="font-medium mb-1">Try this placeholder:</p>
               <button 
-                variant="link" 
-                className="text-primary hover:underline text-left"
+                className="text-primary hover:underline text-left bg-transparent border-none p-0 cursor-pointer"
                 onClick={() => {
                   setTask("Study for upcoming Biology mid-term covering chapters 4-7");
                   setPriority("high");

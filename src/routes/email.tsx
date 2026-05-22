@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { streamAiAction } from "@/lib/ai";
 import { toast } from "sonner";
-import { Loader2, Sparkles, Copy, CheckCircle2 } from "lucide-react";
+import { Loader2, Sparkles, Copy, CheckCircle2, Mail } from "lucide-react";
 
 export const Route = createFileRoute("/email")({
   component: EmailGenerator,
@@ -126,8 +126,7 @@ function EmailGenerator() {
             <div className="pt-4 text-sm text-muted-foreground">
               <p className="font-medium mb-1">Example prompt:</p>
               <button 
-                variant="link" 
-                className="text-primary hover:underline text-left"
+                className="text-primary hover:underline text-left bg-transparent border-none p-0 cursor-pointer"
                 onClick={() => {
                   setContext("I need to ask for a 2-day extension on the final project. I've been sick the past few days.");
                   setAudience("professor");
