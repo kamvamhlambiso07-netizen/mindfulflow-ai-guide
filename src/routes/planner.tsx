@@ -35,7 +35,12 @@ function Planner() {
 
     await streamAiAction({
       action: "plan",
-      payload: { task, priority, duration },
+      payload: { 
+        task, 
+        priority, 
+        duration,
+        userContext: onboardingData
+      },
       onDelta: (chunk) => {
         setPlan((prev) => prev + chunk);
       },
