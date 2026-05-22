@@ -14,7 +14,75 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      email_drafts: {
+        Row: {
+          audience: string | null
+          content: string
+          created_at: string
+          id: string
+          subject: string | null
+          tone: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          audience?: string | null
+          content: string
+          created_at?: string
+          id?: string
+          subject?: string | null
+          tone?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          audience?: string | null
+          content?: string
+          created_at?: string
+          id?: string
+          subject?: string | null
+          tone?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      tasks: {
+        Row: {
+          ai_suggestions: string | null
+          created_at: string
+          duration_minutes: number | null
+          id: string
+          priority: string | null
+          status: string | null
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          ai_suggestions?: string | null
+          created_at?: string
+          duration_minutes?: number | null
+          id?: string
+          priority?: string | null
+          status?: string | null
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          ai_suggestions?: string | null
+          created_at?: string
+          duration_minutes?: number | null
+          id?: string
+          priority?: string | null
+          status?: string | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
