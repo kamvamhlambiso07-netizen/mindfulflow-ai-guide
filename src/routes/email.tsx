@@ -15,6 +15,7 @@ export const Route = createFileRoute("/email")({
 });
 
 function EmailGenerator() {
+  const { onboardingData } = useUser();
   const [audience, setAudience] = useState("manager");
   const [tone, setTone] = useState("professional");
   const [context, setContext] = useState("");
