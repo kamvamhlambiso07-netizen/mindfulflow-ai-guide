@@ -1,6 +1,7 @@
 import { QueryClient } from "@tanstack/react-query";
 import { createRouter } from "@tanstack/react-router";
 import { routeTree } from "./routeTree.gen";
+import type { AuthState } from "./hooks/use-auth";
 
 export const getRouter = () => {
   const queryClient = new QueryClient();
@@ -9,7 +10,11 @@ export const getRouter = () => {
     routeTree,
     context: { 
       queryClient,
-      auth: undefined!, // will be set at render time
+      auth: {
+        isAuthenticated: false,
+        user: null,
+        isLoading: false,
+      } as AuthState, // default values, overridden in __root
     },
     scrollRestoration: true,
     defaultPreloadStaleTime: 0,
