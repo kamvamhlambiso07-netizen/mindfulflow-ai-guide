@@ -78,15 +78,22 @@ function Coach() {
   };
 
   return (
-    <div className="h-[calc(100vh-6rem)] animate-in fade-in slide-in-from-bottom-4 duration-500 max-w-4xl mx-auto flex flex-col">
-      <div className="mb-6 flex-shrink-0">
-        <h1 className="text-3xl font-heading font-bold text-foreground">AI Productivity Coach</h1>
-        <p className="text-muted-foreground mt-2">
-          Chat with an empathetic AI assistant designed to help you overcome blocks and build healthier habits.
-        </p>
+    <div className="h-[calc(100vh-6rem)] animate-in fade-in slide-in-from-bottom-4 duration-500 max-w-5xl mx-auto flex flex-col pb-6">
+      <div className="bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-slate-100 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 relative overflow-hidden flex-shrink-0 mb-6">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-green-50 rounded-full blur-3xl -mr-20 -mt-20 pointer-events-none"></div>
+        <div className="relative z-10">
+          <div className="inline-flex items-center rounded-full border border-green-200 bg-green-50 px-3 py-1 text-sm font-medium text-green-800 mb-4">
+            <Bot className="w-4 h-4 mr-2 text-green-500" />
+            AI Productivity Coach
+          </div>
+          <h1 className="text-3xl md:text-4xl font-heading font-extrabold text-slate-900 tracking-tight">Your Personal Guide</h1>
+          <p className="text-slate-600 mt-2 text-lg max-w-2xl">
+            Chat with an empathetic AI assistant designed to help you overcome blocks and build healthier habits.
+          </p>
+        </div>
       </div>
 
-      <Card className="flex-1 flex flex-col border-none shadow-sm overflow-hidden">
+      <Card className="flex-1 flex flex-col border border-slate-100 shadow-md rounded-2xl overflow-hidden bg-white">
         <CardContent className="flex-1 overflow-y-auto p-4 space-y-6">
           {messages.map((msg, index) => (
             <div 
