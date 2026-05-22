@@ -10,6 +10,7 @@ import { streamAiAction } from "@/lib/ai";
 import { toast } from "sonner";
 import { Loader2, Sparkles, CheckSquare } from "lucide-react";
 import ReactMarkdown from "react-markdown";
+import { useUser } from "@/contexts/UserContext";
 
 export const Route = createFileRoute("/planner")({
   component: Planner,
