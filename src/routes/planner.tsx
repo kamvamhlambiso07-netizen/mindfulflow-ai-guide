@@ -17,6 +17,7 @@ export const Route = createFileRoute("/planner")({
 });
 
 function Planner() {
+  const { onboardingData } = useUser();
   const [task, setTask] = useState("");
   const [priority, setPriority] = useState("medium");
   const [duration, setDuration] = useState("60");
