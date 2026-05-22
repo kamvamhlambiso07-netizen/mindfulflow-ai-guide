@@ -19,11 +19,24 @@ serve(async (req) => {
 
     let messages = [];
     
+    // Add user context for personalization if provided
+    let userContextString = "";
+    if (payload.userContext) {
+      const { affectingProductivity, strugglingHabits, dailyGoals, struggleTime } = payload.userContext;
+      userContextString = `\n\nUSER CONTEXT (CRITICAL FOR PERSONALIZATION):
+- What affects their productivity: ${affectingProductivity || 'Not specified'}
+- Habits they struggle with: ${(strugglingHabits || []).join(', ') || 'Not specified'}
+- Their daily goals: ${dailyGoals || 'Not specified'}
+- When they struggle most: ${(struggleTime || []).join(', ') || 'Not specified'}
+
+You MUST use this context to personalize your responses, making them highly relevant, supportive, and specifically tailored to the user's challenges and goals. DO NOT judge the user. Provide actionable, empathetic advice suited to their specific time constraints and habits.`;
+    }
+    
     if (action === "chat") {
       messages = [
         { 
           role: "system", 
-          content: "You are an AI Productivity Coach for FocusFlow AI. Your goal is to help users overcome procrastination, stay focused, and build healthy work habits. Provide motivational advice, practical focus techniques, and empathetic support. Do not provide medical or psychological treatment advice. Keep responses concise, structured, and professional." 
+          content: "You are an AI Productivity Coach for FocusFlow AI. Your goal is to help users overcome procrastination, stay focused, and build healthy work habits. Provide motivational advice, practical focus techniques, and empathetic support. Do not provide medical or psychological treatment advice. Keep responses concise, structured, and professional." + userContextString
         },
         ...payload.messages,
       ];
@@ -31,7 +44,7 @@ serve(async (req) => {
       messages = [
         {
           role: "system",
-          content: "You are an expert professional communicator and email copywriter for FocusFlow AI. Your job is to generate well-structured, clear, and effective emails based on the user's instructions. Output only the email content without extra commentary."
+          content: "You are an expert professional communicator and email copywriter for FocusFlow AI. Your job is to generate well-structured, clear, and effective emails based on the user's instructions. Output only the email content without extra commentary." + userContextString
         },
         {
           role: "user",
@@ -46,7 +59,7 @@ Please draft the email.`
       messages = [
         {
           role: "system",
-          content: "You are a strategic AI Task Planner for FocusFlow AI. Your job is to take a user's task, priority, and available time, and provide a structured plan on how to tackle it. Suggest a specific focus technique (like Pomodoro, Time Blocking) and strategic break times. Output a clear, actionable markdown plan."
+          content: "You are a strategic AI Task Planner for FocusFlow AI. Your job is to take a user's task, priority, and available time, and provide a structured plan on how to tackle it. Suggest a specific focus technique (like Pomodoro, Time Blocking) and strategic break times. Output a clear, actionable markdown plan." + userContextString
         },
         {
           role: "user",

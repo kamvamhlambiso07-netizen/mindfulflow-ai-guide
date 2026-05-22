@@ -8,6 +8,8 @@ import {
 } from "@tanstack/react-router";
 import { AppLayout } from "@/components/AppLayout";
 import { Toaster } from "@/components/ui/sonner";
+import { UserProvider, useUser } from "@/contexts/UserContext";
+import { Navigate, useLocation } from "@tanstack/react-router";
 import appCss from "../styles.css?url";
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
@@ -49,9 +51,28 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <AppLayout>
-        <Outlet />
-      </AppLayout>
+      <UserProvider>
+        <RequireOnboarding>
+          <AppLayout>
+            <Outlet />
+          </AppLayout>
+        </RequireOnboarding>
+      </UserProvider>
     </QueryClientProvider>
   );
+}
+
+function RequireOnboarding({ children }: { children: React.ReactNode }) {
+  const { isOnboardingComplete } = useUser();
+  const location = useLocation();
+
+  if (!isOnboardingComplete && !location.pathname.includes('/onboarding')) {
+    return <Navigate to="/onboarding" />;
+  }
+  
+  if (location.pathname.includes('/onboarding')) {
+    return <Outlet />;
+  }
+
+  return <>{children}</>;
 }

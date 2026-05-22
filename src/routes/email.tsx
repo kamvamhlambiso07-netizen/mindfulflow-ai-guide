@@ -8,12 +8,14 @@ import { Textarea } from "@/components/ui/textarea";
 import { streamAiAction } from "@/lib/ai";
 import { toast } from "sonner";
 import { Loader2, Sparkles, Copy, CheckCircle2, Mail } from "lucide-react";
+import { useUser } from "@/contexts/UserContext";
 
 export const Route = createFileRoute("/email")({
   component: EmailGenerator,
 });
 
 function EmailGenerator() {
+  const { onboardingData } = useUser();
   const [audience, setAudience] = useState("manager");
   const [tone, setTone] = useState("professional");
   const [context, setContext] = useState("");
@@ -32,7 +34,12 @@ function EmailGenerator() {
 
     await streamAiAction({
       action: "email",
-      payload: { audience, tone, context },
+      payload: { 
+        audience, 
+        tone, 
+        context,
+        userContext: onboardingData
+      },
       onDelta: (chunk) => {
         setEmailOutput((prev) => prev + chunk);
       },
@@ -54,21 +61,28 @@ function EmailGenerator() {
   };
 
   return (
-    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500 max-w-4xl mx-auto">
-      <div>
-        <h1 className="text-3xl font-heading font-bold text-foreground">Smart Email Generator</h1>
-        <p className="text-muted-foreground mt-2">
-          Struggling with what to say? Let AI draft a perfect email tailored to your audience and tone.
-        </p>
+    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 max-w-5xl mx-auto pb-12">
+      <div className="bg-white rounded-3xl p-8 shadow-sm border border-slate-100 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-purple-50 rounded-full blur-3xl -mr-20 -mt-20 pointer-events-none"></div>
+        <div className="relative z-10">
+          <div className="inline-flex items-center rounded-full border border-purple-200 bg-purple-50 px-3 py-1 text-sm font-medium text-purple-800 mb-4">
+            <Mail className="w-4 h-4 mr-2 text-purple-500" />
+            Smart Email Generator
+          </div>
+          <h1 className="text-3xl md:text-4xl font-heading font-extrabold text-slate-900 tracking-tight">Draft Perfect Emails</h1>
+          <p className="text-slate-600 mt-2 text-lg max-w-2xl">
+            Struggling with what to say? Let AI draft a perfect email tailored to your audience and tone.
+          </p>
+        </div>
       </div>
 
-      <div className="grid md:grid-cols-12 gap-6">
-        <Card className="md:col-span-5 border-none shadow-sm">
-          <CardHeader>
-            <CardTitle>Email Context</CardTitle>
-            <CardDescription>Who are you writing to and why?</CardDescription>
+      <div className="grid lg:grid-cols-12 gap-8">
+        <Card className="lg:col-span-5 border border-slate-100 shadow-md rounded-2xl overflow-hidden bg-white">
+          <CardHeader className="bg-slate-50 border-b border-slate-100 pb-6">
+            <CardTitle className="font-heading text-xl">Email Context</CardTitle>
+            <CardDescription className="text-base">Who are you writing to and why?</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-6 pt-6">
             <div className="space-y-2">
               <Label htmlFor="audience">Audience</Label>
               <Select value={audience} onValueChange={setAudience}>

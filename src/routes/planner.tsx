@@ -10,12 +10,14 @@ import { streamAiAction } from "@/lib/ai";
 import { toast } from "sonner";
 import { Loader2, Sparkles, CheckSquare } from "lucide-react";
 import ReactMarkdown from "react-markdown";
+import { useUser } from "@/contexts/UserContext";
 
 export const Route = createFileRoute("/planner")({
   component: Planner,
 });
 
 function Planner() {
+  const { onboardingData } = useUser();
   const [task, setTask] = useState("");
   const [priority, setPriority] = useState("medium");
   const [duration, setDuration] = useState("60");
@@ -33,7 +35,12 @@ function Planner() {
 
     await streamAiAction({
       action: "plan",
-      payload: { task, priority, duration },
+      payload: { 
+        task, 
+        priority, 
+        duration,
+        userContext: onboardingData
+      },
       onDelta: (chunk) => {
         setPlan((prev) => prev + chunk);
       },
@@ -48,21 +55,28 @@ function Planner() {
   };
 
   return (
-    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500 max-w-4xl mx-auto">
-      <div>
-        <h1 className="text-3xl font-heading font-bold text-foreground">AI Task Planner</h1>
-        <p className="text-muted-foreground mt-2">
-          Enter what you need to do, and our AI will break it down into manageable steps with focus techniques.
-        </p>
+    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 max-w-5xl mx-auto pb-12">
+      <div className="bg-white rounded-3xl p-8 shadow-sm border border-slate-100 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-sky-100 rounded-full blur-3xl -mr-20 -mt-20 pointer-events-none"></div>
+        <div className="relative z-10">
+          <div className="inline-flex items-center rounded-full border border-sky-200 bg-sky-50 px-3 py-1 text-sm font-medium text-sky-800 mb-4">
+            <Sparkles className="w-4 h-4 mr-2 text-sky-500" />
+            AI Task Planner
+          </div>
+          <h1 className="text-3xl md:text-4xl font-heading font-extrabold text-slate-900 tracking-tight">Structured Focus</h1>
+          <p className="text-slate-600 mt-2 text-lg max-w-2xl">
+            Enter what you need to do, and our AI will break it down into manageable steps with focus techniques.
+          </p>
+        </div>
       </div>
 
-      <div className="grid md:grid-cols-12 gap-6">
-        <Card className="md:col-span-5 border-none shadow-sm">
-          <CardHeader>
-            <CardTitle>Task Details</CardTitle>
-            <CardDescription>Tell us about the task</CardDescription>
+      <div className="grid lg:grid-cols-12 gap-8">
+        <Card className="lg:col-span-5 border border-slate-100 shadow-md rounded-2xl overflow-hidden bg-white">
+          <CardHeader className="bg-slate-50 border-b border-slate-100 pb-6">
+            <CardTitle className="font-heading text-xl">Task Details</CardTitle>
+            <CardDescription className="text-base">Tell us about the task at hand</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-6 pt-6">
             <div className="space-y-2">
               <Label htmlFor="task">Task Description</Label>
               <Textarea
