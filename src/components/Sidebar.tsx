@@ -1,6 +1,9 @@
-import { Link, useLocation } from "@tanstack/react-router";
-import { LayoutDashboard, CheckSquare, Mail, Bot, ShieldAlert, FileText } from "lucide-react";
+import { Link, useLocation, useRouter } from "@tanstack/react-router";
+import { LayoutDashboard, CheckSquare, Mail, Bot, ShieldAlert, FileText, LogOut } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
 
 const navItems = [
   { href: "/", label: "Dashboard", icon: LayoutDashboard },
@@ -13,6 +16,17 @@ const navItems = [
 
 export function Sidebar() {
   const location = useLocation();
+  const router = useRouter();
+
+  const handleSignOut = async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      toast.error(error.message);
+    } else {
+      toast.success("Signed out successfully");
+      router.invalidate();
+    }
+  };
 
   return (
     <aside className="md:w-64 flex-shrink-0 border-b md:border-b-0 md:border-r border-sidebar-border bg-sidebar md:h-full flex flex-col">
@@ -44,7 +58,15 @@ export function Sidebar() {
           );
         })}
       </nav>
-      <div className="hidden md:block p-4 border-t border-sidebar-border">
+      <div className="hidden md:block p-4 border-t border-sidebar-border space-y-4">
+        <Button 
+          variant="ghost" 
+          className="w-full justify-start text-sidebar-foreground/70 hover:text-sidebar-foreground hover:bg-sidebar-accent/50" 
+          onClick={handleSignOut}
+        >
+          <LogOut className="w-4 h-4 mr-2" />
+          Sign out
+        </Button>
         <div className="text-xs text-sidebar-foreground/50 text-center">
           &copy; {new Date().getFullYear()} FocusFlow AI
         </div>

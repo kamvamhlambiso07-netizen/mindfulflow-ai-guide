@@ -12,7 +12,7 @@ import { Loader2, Sparkles, CheckSquare } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { useUser } from "@/contexts/UserContext";
 
-export const Route = createFileRoute("/planner")({
+export const Route = createFileRoute("/_authenticated/planner")({
   component: Planner,
 });
 

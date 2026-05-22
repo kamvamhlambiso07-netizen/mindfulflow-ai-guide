@@ -9,10 +9,17 @@ import {
 import { AppLayout } from "@/components/AppLayout";
 import { Toaster } from "@/components/ui/sonner";
 import { UserProvider, useUser } from "@/contexts/UserContext";
-import { Navigate, useLocation } from "@tanstack/react-router";
+import { Navigate, useLocation, Outlet as RouterOutlet } from "@tanstack/react-router";
+import { useAuth, AuthState } from "@/hooks/use-auth";
 import appCss from "../styles.css?url";
+import { useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { Loader2 } from "lucide-react";
 
-export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
+export const Route = createRootRouteWithContext<{ 
+  queryClient: QueryClient;
+  auth: AuthState;
+}>()({
   head: () => ({
     meta: [
       { charSet: "utf-8" },
@@ -48,31 +55,30 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const auth = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(() => {
+      router.invalidate();
+      queryClient.invalidateQueries();
+    });
+    return () => subscription.unsubscribe();
+  }, [router, queryClient]);
+
+  if (auth.isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-sky-500" />
+      </div>
+    );
+  }
 
   return (
     <QueryClientProvider client={queryClient}>
       <UserProvider>
-        <RequireOnboarding>
-          <AppLayout>
-            <Outlet />
-          </AppLayout>
-        </RequireOnboarding>
+        <RouterOutlet />
       </UserProvider>
     </QueryClientProvider>
   );
-}
-
-function RequireOnboarding({ children }: { children: React.ReactNode }) {
-  const { isOnboardingComplete } = useUser();
-  const location = useLocation();
-
-  if (!isOnboardingComplete && !location.pathname.includes('/onboarding')) {
-    return <Navigate to="/onboarding" />;
-  }
-  
-  if (location.pathname.includes('/onboarding')) {
-    return <Outlet />;
-  }
-
-  return <>{children}</>;
 }

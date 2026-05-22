@@ -1,4 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/use-auth";
+import { Loader2 } from "lucide-react";
 
 export type OnboardingData = {
   affectingProductivity: string;
@@ -9,40 +12,85 @@ export type OnboardingData = {
 
 type UserContextType = {
   onboardingData: OnboardingData | null;
-  setOnboardingData: (data: OnboardingData) => void;
+  setOnboardingData: (data: OnboardingData) => Promise<void>;
   isOnboardingComplete: boolean;
-  clearOnboarding: () => void;
+  clearOnboarding: () => Promise<void>;
 };
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export function UserProvider({ children }: { children: React.ReactNode }) {
+  const { user, isAuthenticated, isLoading: isAuthLoading } = useAuth();
   const [onboardingData, setOnboardingDataState] = useState<OnboardingData | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    const stored = localStorage.getItem("focusflow_onboarding");
-    if (stored) {
-      try {
-        setOnboardingDataState(JSON.parse(stored));
-      } catch (e) {
-        console.error("Failed to parse onboarding data");
+    async function loadData() {
+      if (isAuthenticated && user) {
+        // Fetch from Supabase
+        const { data, error } = await supabase
+          .from("profiles")
+          .select("onboarding_data")
+          .eq("id", user.id)
+          .single();
+          
+        if (!error && data?.onboarding_data) {
+          setOnboardingDataState(data.onboarding_data as unknown as OnboardingData);
+        } else {
+          setOnboardingDataState(null);
+        }
+      } else {
+        // Fallback to local storage (e.g. if we decide to allow unauth again)
+        const stored = localStorage.getItem("focusflow_onboarding");
+        if (stored) {
+          try {
+            setOnboardingDataState(JSON.parse(stored));
+          } catch (e) {
+            console.error("Failed to parse onboarding data");
+          }
+        }
       }
+      setIsLoaded(true);
     }
-    setIsLoaded(true);
-  }, []);
 
-  const setOnboardingData = (data: OnboardingData) => {
+    if (!isAuthLoading) {
+      loadData();
+    }
+  }, [isAuthenticated, user, isAuthLoading]);
+
+  const setOnboardingData = async (data: OnboardingData) => {
     setOnboardingDataState(data);
-    localStorage.setItem("focusflow_onboarding", JSON.stringify(data));
+    
+    if (isAuthenticated && user) {
+      await supabase
+        .from("profiles")
+        .update({ onboarding_data: data as any })
+        .eq("id", user.id);
+    } else {
+      localStorage.setItem("focusflow_onboarding", JSON.stringify(data));
+    }
   };
 
-  const clearOnboarding = () => {
+  const clearOnboarding = async () => {
     setOnboardingDataState(null);
-    localStorage.removeItem("focusflow_onboarding");
+    
+    if (isAuthenticated && user) {
+      await supabase
+        .from("profiles")
+        .update({ onboarding_data: null })
+        .eq("id", user.id);
+    } else {
+      localStorage.removeItem("focusflow_onboarding");
+    }
   };
 
-  if (!isLoaded) return null;
+  if (isAuthLoading || !isLoaded) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-sky-500" />
+      </div>
+    );
+  }
 
   return (
     <UserContext.Provider
