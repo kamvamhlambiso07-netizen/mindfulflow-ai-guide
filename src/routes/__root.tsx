@@ -8,24 +8,23 @@ import {
 } from "@tanstack/react-router";
 import { AppLayout } from "@/components/AppLayout";
 import { Toaster } from "@/components/ui/sonner";
-import { UserProvider, useUser } from "@/contexts/UserContext";
-import { Navigate, useLocation, Outlet as RouterOutlet } from "@tanstack/react-router";
-import { useAuth, AuthState } from "@/hooks/use-auth";
 import appCss from "../styles.css?url";
-import { useEffect } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import { Loader2 } from "lucide-react";
 
-export const Route = createRootRouteWithContext<{ 
-  queryClient: QueryClient;
-  auth: AuthState;
-}>()({
+export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
   head: () => ({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "FocusFlow AI" },
       { name: "description", content: "Habit Recovery & Productivity Assistant" },
+      { property: "og:title", content: "FocusFlow AI" },
+      { name: "twitter:title", content: "FocusFlow AI" },
+      { property: "og:description", content: "Habit Recovery & Productivity Assistant" },
+      { name: "twitter:description", content: "Habit Recovery & Productivity Assistant" },
+      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/dMqV85vAlgf4RqoB9dnQZ5V1pqo2/social-images/social-1779453548706-OIP.webp" },
+      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/dMqV85vAlgf4RqoB9dnQZ5V1pqo2/social-images/social-1779453548706-OIP.webp" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { property: "og:type", content: "website" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
@@ -55,30 +54,12 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
-  const auth = useAuth();
-  const router = useRouter();
-
-  useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(() => {
-      router.invalidate();
-      queryClient.invalidateQueries();
-    });
-    return () => subscription.unsubscribe();
-  }, [router, queryClient]);
-
-  if (auth.isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-sky-500" />
-      </div>
-    );
-  }
 
   return (
     <QueryClientProvider client={queryClient}>
-      <UserProvider>
-        <RouterOutlet />
-      </UserProvider>
+      <AppLayout>
+        <Outlet />
+      </AppLayout>
     </QueryClientProvider>
   );
 }
