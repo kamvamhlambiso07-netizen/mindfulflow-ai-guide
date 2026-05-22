@@ -8,11 +8,16 @@ import {
 } from "@tanstack/react-router";
 import { AppLayout } from "@/components/AppLayout";
 import { Toaster } from "@/components/ui/sonner";
-import { UserProvider, useUser } from "@/contexts/UserContext";
-import { Navigate, useLocation } from "@tanstack/react-router";
+import { UserProvider } from "@/contexts/UserContext";
+import { useAuth, AuthState } from "@/hooks/use-auth";
 import appCss from "../styles.css?url";
+import { useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
-export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
+export const Route = createRootRouteWithContext<{ 
+  queryClient: QueryClient;
+  auth: AuthState;
+}>()({
   head: () => ({
     meta: [
       { charSet: "utf-8" },
