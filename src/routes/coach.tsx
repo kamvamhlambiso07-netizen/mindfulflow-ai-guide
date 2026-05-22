@@ -17,6 +17,7 @@ export const Route = createFileRoute("/coach")({
 type Message = { role: "user" | "assistant"; content: string };
 
 function Coach() {
+  const { onboardingData } = useUser();
   const [messages, setMessages] = useState<Message[]>([
     { role: "assistant", content: "Hi there! I'm your Productivity Coach. Are you struggling to focus, facing a specific challenge, or just feeling overwhelmed? Let's talk about it." }
   ]);
