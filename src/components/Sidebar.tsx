@@ -1,5 +1,5 @@
 import { Link, useLocation } from "@tanstack/react-router";
-import { LayoutDashboard, CheckSquare, Mail, Bot, ShieldAlert } from "lucide-react";
+import { LayoutDashboard, CheckSquare, Mail, Bot, ShieldAlert, FileText } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const navItems = [
@@ -8,6 +8,7 @@ const navItems = [
   { href: "/email", label: "Smart Email", icon: Mail },
   { href: "/coach", label: "AI Coach", icon: Bot },
   { href: "/responsible-ai", label: "Ethics", icon: ShieldAlert },
+  { href: "/project-details", label: "Project Details", icon: FileText },
 ];
 
 export function Sidebar() {
