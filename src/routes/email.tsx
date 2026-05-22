@@ -34,7 +34,12 @@ function EmailGenerator() {
 
     await streamAiAction({
       action: "email",
-      payload: { audience, tone, context },
+      payload: { 
+        audience, 
+        tone, 
+        context,
+        userContext: onboardingData
+      },
       onDelta: (chunk) => {
         setEmailOutput((prev) => prev + chunk);
       },
