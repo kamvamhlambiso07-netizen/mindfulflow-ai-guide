@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { ClipboardList, BookOpen, Briefcase, FileCheck } from "lucide-react";
 
-export const Route = createFileRoute("/project-details")({
+export const Route = createFileRoute("/_authenticated/project-details")({
   component: ProjectDetails,
 });
 

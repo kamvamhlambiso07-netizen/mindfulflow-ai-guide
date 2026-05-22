@@ -10,7 +10,7 @@ import ReactMarkdown from "react-markdown";
 import { cn } from "@/lib/utils";
 import { useUser } from "@/contexts/UserContext";
 
-export const Route = createFileRoute("/coach")({
+export const Route = createFileRoute("/_authenticated/coach")({
   component: Coach,
 });
 

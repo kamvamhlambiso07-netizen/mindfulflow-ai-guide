@@ -8,7 +8,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 import { ArrowRight, Sparkles } from "lucide-react";
 
-export const Route = createFileRoute("/onboarding")({
+export const Route = createFileRoute("/_authenticated/onboarding")({
   component: OnboardingPage,
 });
 
