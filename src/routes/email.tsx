@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { streamAiAction } from "@/lib/ai";
 import { toast } from "sonner";
 import { Loader2, Sparkles, Copy, CheckCircle2, Mail } from "lucide-react";
+import { useUser } from "@/contexts/UserContext";
 
 export const Route = createFileRoute("/email")({
   component: EmailGenerator,
