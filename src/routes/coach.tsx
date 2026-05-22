@@ -57,7 +57,10 @@ function Coach() {
 
     await streamAiAction({
       action: "chat",
-      payload: { messages: newMessages },
+      payload: { 
+        messages: newMessages,
+        userContext: onboardingData
+      },
       onDelta: upsertAssistant,
       onDone: () => setIsLoading(false),
       onError: (err) => {
