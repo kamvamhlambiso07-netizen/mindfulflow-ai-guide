@@ -8,6 +8,8 @@ import {
 } from "@tanstack/react-router";
 import { AppLayout } from "@/components/AppLayout";
 import { Toaster } from "@/components/ui/sonner";
+import { UserProvider, useUser } from "@/contexts/UserContext";
+import { Navigate, useLocation } from "@tanstack/react-router";
 import appCss from "../styles.css?url";
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
