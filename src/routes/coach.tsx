@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { Send, Bot, User, Loader2 } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { cn } from "@/lib/utils";
+import { useUser } from "@/contexts/UserContext";
 
 export const Route = createFileRoute("/coach")({
   component: Coach,
