@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ResponsibleAiRouteImport } from './routes/responsible-ai'
+import { Route as ProjectDetailsRouteImport } from './routes/project-details'
 import { Route as PlannerRouteImport } from './routes/planner'
 import { Route as EmailRouteImport } from './routes/email'
 import { Route as CoachRouteImport } from './routes/coach'
@@ -18,6 +19,11 @@ import { Route as IndexRouteImport } from './routes/index'
 const ResponsibleAiRoute = ResponsibleAiRouteImport.update({
   id: '/responsible-ai',
   path: '/responsible-ai',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProjectDetailsRoute = ProjectDetailsRouteImport.update({
+  id: '/project-details',
+  path: '/project-details',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PlannerRoute = PlannerRouteImport.update({
@@ -46,6 +52,7 @@ export interface FileRoutesByFullPath {
   '/coach': typeof CoachRoute
   '/email': typeof EmailRoute
   '/planner': typeof PlannerRoute
+  '/project-details': typeof ProjectDetailsRoute
   '/responsible-ai': typeof ResponsibleAiRoute
 }
 export interface FileRoutesByTo {
@@ -53,6 +60,7 @@ export interface FileRoutesByTo {
   '/coach': typeof CoachRoute
   '/email': typeof EmailRoute
   '/planner': typeof PlannerRoute
+  '/project-details': typeof ProjectDetailsRoute
   '/responsible-ai': typeof ResponsibleAiRoute
 }
 export interface FileRoutesById {
@@ -61,14 +69,34 @@ export interface FileRoutesById {
   '/coach': typeof CoachRoute
   '/email': typeof EmailRoute
   '/planner': typeof PlannerRoute
+  '/project-details': typeof ProjectDetailsRoute
   '/responsible-ai': typeof ResponsibleAiRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/coach' | '/email' | '/planner' | '/responsible-ai'
+  fullPaths:
+    | '/'
+    | '/coach'
+    | '/email'
+    | '/planner'
+    | '/project-details'
+    | '/responsible-ai'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/coach' | '/email' | '/planner' | '/responsible-ai'
-  id: '__root__' | '/' | '/coach' | '/email' | '/planner' | '/responsible-ai'
+  to:
+    | '/'
+    | '/coach'
+    | '/email'
+    | '/planner'
+    | '/project-details'
+    | '/responsible-ai'
+  id:
+    | '__root__'
+    | '/'
+    | '/coach'
+    | '/email'
+    | '/planner'
+    | '/project-details'
+    | '/responsible-ai'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -76,6 +104,7 @@ export interface RootRouteChildren {
   CoachRoute: typeof CoachRoute
   EmailRoute: typeof EmailRoute
   PlannerRoute: typeof PlannerRoute
+  ProjectDetailsRoute: typeof ProjectDetailsRoute
   ResponsibleAiRoute: typeof ResponsibleAiRoute
 }
 
@@ -86,6 +115,13 @@ declare module '@tanstack/react-router' {
       path: '/responsible-ai'
       fullPath: '/responsible-ai'
       preLoaderRoute: typeof ResponsibleAiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/project-details': {
+      id: '/project-details'
+      path: '/project-details'
+      fullPath: '/project-details'
+      preLoaderRoute: typeof ProjectDetailsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/planner': {
@@ -124,8 +160,19 @@ const rootRouteChildren: RootRouteChildren = {
   CoachRoute: CoachRoute,
   EmailRoute: EmailRoute,
   PlannerRoute: PlannerRoute,
+  ProjectDetailsRoute: ProjectDetailsRoute,
   ResponsibleAiRoute: ResponsibleAiRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
