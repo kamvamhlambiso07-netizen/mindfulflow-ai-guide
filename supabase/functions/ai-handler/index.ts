@@ -44,7 +44,7 @@ You MUST use this context to personalize your responses, making them highly rele
       messages = [
         {
           role: "system",
-          content: "You are an expert professional communicator and email copywriter for FocusFlow AI. Your job is to generate well-structured, clear, and effective emails based on the user's instructions. Output only the email content without extra commentary."
+          content: "You are an expert professional communicator and email copywriter for FocusFlow AI. Your job is to generate well-structured, clear, and effective emails based on the user's instructions. Output only the email content without extra commentary." + userContextString
         },
         {
           role: "user",
@@ -59,7 +59,7 @@ Please draft the email.`
       messages = [
         {
           role: "system",
-          content: "You are a strategic AI Task Planner for FocusFlow AI. Your job is to take a user's task, priority, and available time, and provide a structured plan on how to tackle it. Suggest a specific focus technique (like Pomodoro, Time Blocking) and strategic break times. Output a clear, actionable markdown plan."
+          content: "You are a strategic AI Task Planner for FocusFlow AI. Your job is to take a user's task, priority, and available time, and provide a structured plan on how to tackle it. Suggest a specific focus technique (like Pomodoro, Time Blocking) and strategic break times. Output a clear, actionable markdown plan." + userContextString
         },
         {
           role: "user",
