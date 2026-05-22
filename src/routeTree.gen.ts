@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ResponsibleAiRouteImport } from './routes/responsible-ai'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
 import { Route as AuthenticatedProjectDetailsRouteImport } from './routes/_authenticated/project-details'
@@ -21,6 +22,11 @@ import { Route as AuthenticatedCoachRouteImport } from './routes/_authenticated/
 const ResponsibleAiRoute = ResponsibleAiRouteImport.update({
   id: '/responsible-ai',
   path: '/responsible-ai',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedRoute = AuthenticatedRouteImport.update({
@@ -61,6 +67,7 @@ const AuthenticatedCoachRoute = AuthenticatedCoachRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
+  '/login': typeof LoginRoute
   '/responsible-ai': typeof ResponsibleAiRoute
   '/coach': typeof AuthenticatedCoachRoute
   '/email': typeof AuthenticatedEmailRoute
@@ -69,6 +76,7 @@ export interface FileRoutesByFullPath {
   '/project-details': typeof AuthenticatedProjectDetailsRoute
 }
 export interface FileRoutesByTo {
+  '/login': typeof LoginRoute
   '/responsible-ai': typeof ResponsibleAiRoute
   '/coach': typeof AuthenticatedCoachRoute
   '/email': typeof AuthenticatedEmailRoute
@@ -80,6 +88,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_authenticated': typeof AuthenticatedRouteWithChildren
+  '/login': typeof LoginRoute
   '/responsible-ai': typeof ResponsibleAiRoute
   '/_authenticated/coach': typeof AuthenticatedCoachRoute
   '/_authenticated/email': typeof AuthenticatedEmailRoute
@@ -92,6 +101,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/login'
     | '/responsible-ai'
     | '/coach'
     | '/email'
@@ -100,6 +110,7 @@ export interface FileRouteTypes {
     | '/project-details'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/login'
     | '/responsible-ai'
     | '/coach'
     | '/email'
@@ -110,6 +121,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/_authenticated'
+    | '/login'
     | '/responsible-ai'
     | '/_authenticated/coach'
     | '/_authenticated/email'
@@ -121,6 +133,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
+  LoginRoute: typeof LoginRoute
   ResponsibleAiRoute: typeof ResponsibleAiRoute
 }
 
@@ -131,6 +144,13 @@ declare module '@tanstack/react-router' {
       path: '/responsible-ai'
       fullPath: '/responsible-ai'
       preLoaderRoute: typeof ResponsibleAiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated': {
@@ -209,6 +229,7 @@ const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
+  LoginRoute: LoginRoute,
   ResponsibleAiRoute: ResponsibleAiRoute,
 }
 export const routeTree = rootRouteImport
